@@ -43,6 +43,8 @@ $ rm requirements.lock
 $ make requirements.lock
 ```
 
+FastAPI自体のアプデートはベースイメージのビルドから行ってください。
+
 ## ディレクトリ構成
 
 ```shell
@@ -67,9 +69,16 @@ $ make requirements.lock
 └── requirements_test.txt
 ```
 
+### app/
+
+- アプリケーション本体です
+- Dockerイメージの/app/app にマウントされます。
+- エントリポイントは app.main:app です。
+- テストコードは tests/ に配置します。
+
 ### baseimage/
 
 - https://hub.docker.com/r/tiangolo/uvicorn-gunicorn-fastapi/ の更新が滞っているため自前でベースイメージを用意しています。
-- tiangolo/uvicorn-gunicorn-fastapi イメージに合わせています
+- 下記は tiangolo/uvicorn-gunicorn-fastapi イメージに合わせています
   - /app/app に ./app をマウントしていて、エントリポイントは app.main:app です。
-  - gunicorn.conf.py の内容もこのイメージを参考に設定値をしていますが、汎用性を持たせる必要がないため設定値はべた書きです。
+  - gunicorn.conf.py の内容もこのイメージを参考に設定値をしていますが、ここでは汎用性を持たせる必要がないため設定値はべた書きです。

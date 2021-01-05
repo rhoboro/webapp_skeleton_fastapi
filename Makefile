@@ -10,14 +10,14 @@ format: test_modules
 	docker run --rm --name ${IMAGE} -p 80:80 -v $$(pwd):/app -e PYTHONPATH=test_modules ${IMAGE}/${TARGET}:${TAG} python3 -m black app
 	docker run --rm --name ${IMAGE} -p 80:80 -v $$(pwd):/app -e PYTHONPATH=test_modules ${IMAGE}/${TARGET}:${TAG} python3 -m isort app
 
-build:
+build: requirements.lock
 	docker build --target ${TARGET} --build-arg BASE_IMAGE=${BASE_IMAGE} --build-arg BASE_IMAGE_TAG=${BASE_IMAGE_TAG} -t ${IMAGE}/${TARGET}:${TAG} .
 
 build-dev:
-	make build TARGET=dev
+	@make build TARGET=dev
 
 build-prod:
-	make build TARGET=prod TAG=$$(git rev-parse HEAD)
+	@make build TARGET=prod TAG=$$(git rev-parse HEAD)
 
 build-base-image:
 	cd baseimage && docker build -t ${BASE_IMAGE}:${BASE_IMAGE_TAG} .
@@ -32,10 +32,19 @@ test_modules:
 	docker run -it --rm -v $$(pwd):/app ${BASE_IMAGE}:${BASE_IMAGE_TAG} bash -c 'pip install -t test_modules -r requirements_test.txt'
 
 test: test_modules
-	docker run --rm --name ${IMAGE} -p 80:80 -v $$(pwd):/app -e PYTHONPATH=test_modules ${IMAGE}/${TARGET}:${TAG} python3 -m black app
+	@make test-format
+	@make test-pytest
+	@make test-mypy
+
+test-format:
+	docker run --rm --name ${IMAGE} -p 80:80 -v $$(pwd):/app -e PYTHONPATH=test_modules ${IMAGE}/${TARGET}:${TAG} python3 -m black --check app
 	docker run --rm --name ${IMAGE} -p 80:80 -v $$(pwd):/app -e PYTHONPATH=test_modules ${IMAGE}/${TARGET}:${TAG} python3 -m isort --check app
-	docker run --rm --name ${IMAGE} -p 80:80 -v $$(pwd):/app -e PYTHONPATH=test_modules ${IMAGE}/${TARGET}:${TAG} python3 -m pytest -m ${MARK}
+
+test-mypy:
 	docker run --rm --name ${IMAGE} -p 80:80 -v $$(pwd):/app -e PYTHONPATH=test_modules ${IMAGE}/${TARGET}:${TAG} python3 -m mypy app
 
+test-pytest:
+	docker run --rm --name ${IMAGE} -p 80:80 -v $$(pwd):/app -e PYTHONPATH=test_modules ${IMAGE}/${TARGET}:${TAG} python3 -m pytest -m ${MARK}
+
 test-all:
-	make test MARK='""'
+	@make test MARK='""'

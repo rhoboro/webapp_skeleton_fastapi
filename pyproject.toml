@@ -24,12 +24,3 @@ use_parentheses = true
 ensure_newline_before_comments = true
 line_length = 100
 known_local_folder = "app"
-
-[tool.pytest.ini_options]
-testpaths = ["app"]
-addopts = "-v -rsxX -l --tb=short --strict --cov=app -p no:warnings"
-xfails_strict = true
-markers = [
-    "tmp",
-    "optional",
-]

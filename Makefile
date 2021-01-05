@@ -34,8 +34,8 @@ test_modules:
 test: test_modules
 	docker run --rm --name ${IMAGE} -p 80:80 -v $$(pwd):/app -e PYTHONPATH=test_modules ${IMAGE}/${TARGET}:${TAG} python3 -m black app
 	docker run --rm --name ${IMAGE} -p 80:80 -v $$(pwd):/app -e PYTHONPATH=test_modules ${IMAGE}/${TARGET}:${TAG} python3 -m isort --check app
-	docker run --rm --name ${IMAGE} -p 80:80 -v $$(pwd):/app -e PYTHONPATH=test_modules -e APP_CONFIG_FILE=test ${IMAGE}/${TARGET}:${TAG} python3 -m pytest -m ${MARK}
-	docker run --rm --name ${IMAGE} -p 80:80 -v $$(pwd):/app -e PYTHONPATH=test_modules ${IMAGE}/${TARGET}:${TAG} python3 -m mypy --ignore-missing-imports app
+	docker run --rm --name ${IMAGE} -p 80:80 -v $$(pwd):/app -e PYTHONPATH=test_modules ${IMAGE}/${TARGET}:${TAG} python3 -m pytest -m ${MARK}
+	docker run --rm --name ${IMAGE} -p 80:80 -v $$(pwd):/app -e PYTHONPATH=test_modules ${IMAGE}/${TARGET}:${TAG} python3 -m mypy app
 
 test-all:
 	make test MARK='""'

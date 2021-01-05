@@ -12,6 +12,6 @@ class Settings(BaseSettings):
     BASIC_PASSWORD = "password"
 
     class Config:
-        env = os.getenv("APP_CONFIG_FILE", "dev")
+        env = os.environ["APP_CONFIG_FILE"]
         env_file = Path(__file__).parent / f"config/{env}.env"
         case_sensitive = True

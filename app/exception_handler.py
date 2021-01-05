@@ -12,7 +12,7 @@ DEFAULT_CODE = "000"
 logger = logging.getLogger(__name__)
 
 
-def init_app(app: FastAPI):
+def init_app(app: FastAPI) -> None:
     # 例外ハンドラの登録
     app.add_exception_handler(RequestValidationError, validation_exception_handler)
     app.add_exception_handler(404, not_found_handler)

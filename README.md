@@ -30,13 +30,28 @@ config       exception_handler.py  settings.py
 
 ### テスト実行
 
+下記のコマンドを実行するとテストが動きます
+
 ```shell
 $ make test
 ```
 
+テストでは下記を行なっています。
+
+- black によるコードフォーマットのチェック。（[実行時のオプション](https://github.com/rhoboro/webapp_skeleton_fastapi/blob/main/pyproject.toml#L1)）
+- isort によるインポート順序のチェック。（[実行時のオプション](https://github.com/rhoboro/webapp_skeleton_fastapi/blob/main/pyproject.toml#L19)）
+- pytest によるユニットテストの実行。（[実行時のオプション](https://github.com/rhoboro/webapp_skeleton_fastapi/blob/main/setup.cfg#L10)）
+- mypy による静的解析の実行。（[実行時のオプション](https://github.com/rhoboro/webapp_skeleton_fastapi/blob/main/setup.cfg#L1)）
+
+フォーマットチェックでエラーになった際は、下記でコード整形を実行できます。
+
+```shell
+$ make format
+```
+
 ### 依存関係の追加
 
-requirements.txt を更新し、下記を実行します。
+直接依存しているライブラリ名（必要に応じてバージョンも）を `requirements.txt` に追加し、下記を実行します。
 
 ```shell
 $ rm requirements.lock
